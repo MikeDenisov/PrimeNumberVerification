@@ -1,4 +1,5 @@
 ﻿using Grpc.Net.Client;
+
 using PrimeNumberVerificationService.Protos;
 
 using static PrimeNumberVerificationService.Protos.PrimeNumberVerificator;

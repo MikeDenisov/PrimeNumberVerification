@@ -16,8 +16,12 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PrimeNumber.Shared\PrimeNumber.Shared.csproj" />
+  </ItemGroup>
+
 <ItemGroup>
-	<Protobuf Include="..\PrimeNumberVerificationService\Protos\prime_number.proto" GrpcServices="Client">
+	<Protobuf Include="..\PrimeNumber.Service\Protos\prime_number.proto" GrpcServices="Client">
 		<Link>Protos\prime_number.proto</Link>
 	</Protobuf>
 </ItemGroup>

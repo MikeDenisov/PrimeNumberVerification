@@ -16,7 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
+    <PackageReference Include="Calzolari.Grpc.AspNetCore.Validation" Version="6.3.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
+    <PackageReference Include="SlimMessageBus.Host.Memory" Version="2.1.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PrimeNumber.Shared\PrimeNumber.Shared.csproj" />
   </ItemGroup>
 
 </Project>

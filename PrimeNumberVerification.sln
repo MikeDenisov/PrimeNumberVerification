@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrimeNumberVerificationService", "PrimeNumberVerificationService\PrimeNumberVerificationService.csproj", "{72F66410-4085-482D-94FE-05F4836D675F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrimeNumber.Service", "PrimeNumber.Service\PrimeNumber.Service.csproj", "{72F66410-4085-482D-94FE-05F4836D675F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrimeNumberVerificationClient", "PrimeNumberVerificationClient\PrimeNumberVerificationClient.csproj", "{62E26532-1FAA-4501-BE1C-739DF7EA7C51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrimeNumber.Client", "PrimeNumber.Client\PrimeNumber.Client.csproj", "{62E26532-1FAA-4501-BE1C-739DF7EA7C51}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrimeNumber.Shared", "PrimeNumber.Shared\PrimeNumber.Shared.csproj", "{60B3CB7C-ED3F-4019-9AB2-F61E05FC4407}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{62E26532-1FAA-4501-BE1C-739DF7EA7C51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62E26532-1FAA-4501-BE1C-739DF7EA7C51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62E26532-1FAA-4501-BE1C-739DF7EA7C51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60B3CB7C-ED3F-4019-9AB2-F61E05FC4407}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60B3CB7C-ED3F-4019-9AB2-F61E05FC4407}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60B3CB7C-ED3F-4019-9AB2-F61E05FC4407}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60B3CB7C-ED3F-4019-9AB2-F61E05FC4407}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
