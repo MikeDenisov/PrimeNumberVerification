@@ -22,6 +22,7 @@ namespace PrimeNumber.Service.Monitor
             }
         }
 
+        private long PreviousCount = 0;
         private void PrintStatsToConsole()
         {
             Console.Clear();
@@ -29,11 +30,15 @@ namespace PrimeNumber.Service.Monitor
             Console.WriteLine($"Current time: {DateTime.Now}");
 
             var topNumbers = _statisticsStorage.ValidatedNumbers
+                .ToArray()
                 .OrderByDescending(entry => entry.Value)
                 .Take(10)
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
 
+            var rps = (_statisticsStorage.RequestsCount - PreviousCount) / TimeSpan.FromMilliseconds(_delay).TotalSeconds;
+            Console.WriteLine($"Requests per second: {rps}");
             Console.WriteLine($"Requests Count: {_statisticsStorage.RequestsCount}");
+            PreviousCount = _statisticsStorage.RequestsCount;
 
             Console.WriteLine("Most requested prime numbers:");
             foreach (var pair in topNumbers)

@@ -1,15 +1,33 @@
 ﻿using Grpc.Net.Client;
 
-using PrimeNumberVerificationService.Protos;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-using static PrimeNumberVerificationService.Protos.PrimeNumberVerificator;
+using PowerArgs;
+using PrimeNumber.Client.Config;
+using PrimeNumber.Client.RateLimiter;
+using PrimeNumber.Client.Services;
+using PrimeNumber.Client.Storage;
+using PrimeNumber.Client.Workers;
+using PrimeNumber.Shared;
 
-using var channel = GrpcChannel.ForAddress("https://localhost:7091");
-var client = new PrimeNumberVerificatorClient(channel);
+var config = Args.Parse<ClientConfig>(args);
 
-var reply = await client.ValidateNumberAsync(
-                  new PrimeNumberRequest() { Id = 1, Number = 3, Timestamp = DateTime.UnixEpoch.Ticks });
+if (config == null) // Wrong args or help
+    return;
 
-Console.WriteLine("Result: " + reply.Valid);
-Console.WriteLine("Press any key to exit...");
-Console.ReadKey();
+var builder = Host.CreateApplicationBuilder();
+
+builder.Services.AddSingleton<IClientConfig>(config);
+builder.Services.AddTransient<IRateLimiter, FixedWindowRateLimiter>(services => new FixedWindowRateLimiter(config.RequestsPerSecond));
+builder.Services.AddSingleton<IExecutionStorage, ExecutionStorage>();
+builder.Services.AddSingleton(GrpcChannel.ForAddress(config.RemoteAddress));
+builder.Services.AddHostedService<RequestExecutionServie>();
+builder.Services.AddHostedService<ResponsesProcessingService>();
+builder.Services.AddSingleton<IPrimeNumberValidator>(new PrimeNumberValidator(config.NumberLimit));
+
+var host = builder.Build();
+
+await host.StartAsync();
+
+Console.ReadLine();
