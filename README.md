@@ -1,4 +1,7 @@
 # Prime Number Validator
+
+![CI](https://github.com/MikeDenisov/PrimeNumberVerification/actions/workflows/dotnet.yml/badge.svg)
+
 This repository contains a gRPC service for validating if a number is prime or not, as well as a client for load testing this service. It is implemented using .NET.
 
 ## Build and Publish
