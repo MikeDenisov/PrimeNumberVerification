@@ -18,7 +18,7 @@ namespace PrimeNumber.Client.Workers
         private readonly ConcurrentQueue<RequestResultModel> _requestsQueue;
         private readonly ExecutionStatistics _statsStorage;
         private readonly IHostApplicationLifetime _lifetime;
-        private Dictionary<Status, int> _statusCounts = new Dictionary<Status, int>();
+        private Dictionary<StatusCode, int> _statusCounts = new Dictionary<StatusCode, int>();
 
         public ResponsesProcessingService(IClientConfig clientConfig, IPrimeNumberValidator validator, IExecutionStorage executionStorage, IHostApplicationLifetime lifetime)
         {
@@ -52,9 +52,9 @@ namespace PrimeNumber.Client.Workers
             _statsStorage.TotalRequests++;
             _statsStorage.FailedRequests += request.Status.StatusCode == StatusCode.OK ? 0 : 1;
             
-            if(!_statusCounts.TryAdd(request.Status, 1))
+            if(!_statusCounts.TryAdd(request.Status.StatusCode, 1))
             {
-                _statusCounts[request.Status]++;
+                _statusCounts[request.Status.StatusCode]++;
             }
 
             PrintToConsole(request, isValid);
@@ -86,14 +86,14 @@ namespace PrimeNumber.Client.Workers
                 (_statsStorage.AverateRequestsPerSec == _clientConfig.RequestsPerSecond ? ConsoleColor.Green : ConsoleColor.Red, 
                     _statsStorage.AverateRequestsPerSec.ToString()));
 
-            Console.WriteLine("Requests aggregation:");
+            Console.WriteLine("Requests summary:");
 
             foreach (var pair in _statusCounts)
             {
                 ConsoleExt.WriteLineInColor(
-                    (pair.Key.StatusCode == StatusCode.OK ? ConsoleColor.Green : ConsoleColor.Red, $"{pair.Key.StatusCode,15}"),
-                    (Console.ForegroundColor, $" :: Count: { pair.Value, 7 } ::"),
-                    (Console.ForegroundColor, $" :: {pair.Key.Detail} ::"));
+                    (Console.ForegroundColor, $":: Status: {(int)pair.Key} :: "),
+                    (pair.Key == StatusCode.OK ? ConsoleColor.Green : ConsoleColor.Red, $"{pair.Key}"),
+                    (Console.ForegroundColor, $" :: Count: {pair.Value} ::"));
             }
         }
     }
