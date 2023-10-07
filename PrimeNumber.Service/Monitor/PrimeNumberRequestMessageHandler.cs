@@ -4,11 +4,11 @@ using SlimMessageBus;
 
 namespace PrimeNumber.Service.Monitor
 {
-    public class PrimeNumberRequestMessageConsumer: IConsumer<PrimeNumberRequestMessage>
+    public class PrimeNumberRequestMessageHandler: IConsumer<PrimeNumberRequestMessage>
     {
         private readonly IMonitorStatisticsStorage _statisticsStorage;
 
-        public PrimeNumberRequestMessageConsumer(IMonitorStatisticsStorage statisticsStorage)
+        public PrimeNumberRequestMessageHandler(IMonitorStatisticsStorage statisticsStorage)
         {
             _statisticsStorage = statisticsStorage;
         }
@@ -16,6 +16,7 @@ namespace PrimeNumber.Service.Monitor
         public Task OnHandle(PrimeNumberRequestMessage message)
         {
             _statisticsStorage.IncreaseRequestsCount();
+
             if (message.IsValid)
             {
                 _statisticsStorage.AddValidatedNumber(message.Number);

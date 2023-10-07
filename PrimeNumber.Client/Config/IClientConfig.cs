@@ -4,7 +4,7 @@
     {
         int ExecutionTime { get; }
         long NumberLimit { get; }
-        string RemoteAddress { get; }
+        string Url { get; }
         int RequestsPerSecond { get; }
     }
 }

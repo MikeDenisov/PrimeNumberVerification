@@ -37,6 +37,8 @@ namespace PrimeNumber.Client.Services
         {
             await Task.Yield(); // Needed to unblock other services execution
 
+            _executionStorage.Statistics.StartTime = DateTime.UtcNow;
+
             var requestTasks = new List<Task>(_requestsCount);
             var random = new Random();
 
@@ -55,6 +57,9 @@ namespace PrimeNumber.Client.Services
             }
 
             await Task.WhenAll(requestTasks);
+
+            _executionStorage.Statistics.FinishTime = DateTime.UtcNow;
+            _executionStorage.Statistics.IsComplete = true;
         }
 
         private async Task ExecuteSingleRequestAsync(long id, long number, CancellationToken stoppingToken)
@@ -78,12 +83,11 @@ namespace PrimeNumber.Client.Services
                 sw.Start();
                 var reply = await client.ValidateNumberAsync(request, cancellationToken: stoppingToken);
                 result.RemoteResult = reply.Valid;
-                result.IsSuccessfull = true;
+                result.Status = Status.DefaultSuccess;
             }
             catch (RpcException ex)
             {
-                result.IsSuccessfull = false;
-                //Console.WriteLine(ex.Message);
+                result.Status = ex.Status;
             }
             catch (Exception ex)
             {

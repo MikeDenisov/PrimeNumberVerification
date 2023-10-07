@@ -1,14 +1,5 @@
 {
   "profiles": {
-    "http": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5210"
-    },
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
@@ -17,15 +8,6 @@
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7091;http://localhost:5210"
-    },
-    "WSL": {
-      "commandName": "WSL2",
-      "launchUrl": "https://localhost:7091",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_URLS": "https://localhost:7091;http://localhost:5210"
-      },
-      "distributionName": ""
     }
   }
 }

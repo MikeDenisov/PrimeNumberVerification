@@ -23,7 +23,7 @@ namespace PrimeNumber.Service.Monitor
 
         public void IncreaseRequestsCount(long count = 1)
         {
-            _requestsCounter += count;
+            Interlocked.Add(ref _requestsCounter, count);
         }
 
         public void AddValidatedNumber(long num, long count = 1)

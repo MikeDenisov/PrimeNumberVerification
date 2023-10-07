@@ -3,7 +3,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using PowerArgs;
 using PrimeNumber.Client.Config;
 using PrimeNumber.Client.RateLimiter;
 using PrimeNumber.Client.Services;
@@ -11,23 +10,40 @@ using PrimeNumber.Client.Storage;
 using PrimeNumber.Client.Workers;
 using PrimeNumber.Shared;
 
-var config = Args.Parse<ClientConfig>(args);
+class Program
+{
+    /// <summary>
+    /// Runs Prime Number web service load test
+    /// </summary>
+    /// <param name="url">Service url</param>
+    /// <param name="time">Test execution time</param>
+    /// <param name="rate">Target requests per second rate</param>
+    /// <param name="limit">Max supported input number. May infulence startup time with large values</param>
+    static async Task Main(string url = "http://localhost:4242", int time = 1, int rate = 10000, long limit = 1000)
+    {
+        var builder = Host.CreateApplicationBuilder();
 
-if (config == null) // Wrong args or help
-    return;
+        builder.Services.AddSingleton<IClientConfig>(new ClientConfig()
+        {
+            Url = url,
+            ExecutionTime = time,
+            RequestsPerSecond = rate,
+            NumberLimit = limit
+        });
 
-var builder = Host.CreateApplicationBuilder();
+        builder.Services.AddTransient<IRateLimiter, FixedWindowRateLimiter>(services => new FixedWindowRateLimiter(rate));
+        builder.Services.AddSingleton<IExecutionStorage, ExecutionStorage>();
+        builder.Services.AddSingleton(GrpcChannel.ForAddress(url));
+        builder.Services.AddHostedService<RequestExecutionServie>();
+        builder.Services.AddHostedService<ResponsesProcessingService>();
+        builder.Services.AddSingleton<IPrimeNumberValidator>(new PrimeNumberValidator(limit));
 
-builder.Services.AddSingleton<IClientConfig>(config);
-builder.Services.AddTransient<IRateLimiter, FixedWindowRateLimiter>(services => new FixedWindowRateLimiter(config.RequestsPerSecond));
-builder.Services.AddSingleton<IExecutionStorage, ExecutionStorage>();
-builder.Services.AddSingleton(GrpcChannel.ForAddress(config.RemoteAddress));
-builder.Services.AddHostedService<RequestExecutionServie>();
-builder.Services.AddHostedService<ResponsesProcessingService>();
-builder.Services.AddSingleton<IPrimeNumberValidator>(new PrimeNumberValidator(config.NumberLimit));
+        var host = builder.Build();
 
-var host = builder.Build();
+        await host.StartAsync();
+        await host.WaitForShutdownAsync();
 
-await host.StartAsync();
-
-Console.ReadLine();
+        Console.WriteLine("Hit Enter to exit");
+        Console.ReadLine();
+    }
+}
